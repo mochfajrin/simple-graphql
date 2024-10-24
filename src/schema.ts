@@ -1,43 +1,23 @@
-export const typeDefs = `#graphql
-    type Game {
-        id: ID!,
-        title: String!,
-        platform: [String!]!,
-        reviews: [Review!]
-    }
-    type Review {
-        id: ID!,
-        game_id: String,
-        rating: Int!,
-        content: String!
-        game: Game!
-        author: Author!
-    }
-    type Author {
-        id: ID!,
-        name: String!,
-        verified: Boolean!,
-        reviews: [Review!]
-    }
-    type Query {
-        game(id: ID!): Game,
-        author(id: ID!): Author,
-        review(id: ID!): Review,
-        games: [Game],
-        authors: [Author]
-        reviews: [Review],
-    }
-    type Mutation {
-        deleteGame(id: ID!): [Game],
-        addGame(game: AddGameInput): Game
-        updateGame(id: ID!, game: UpdateGameInput): Game
-    }
-    input UpdateGameInput {
-        title: String!,
-        platform: [String!]!,
-    }
-    input AddGameInput{
-        title: String!,
-        platform: [String!]!,
-    }
-`;
+import { Resolvers } from "./__generated__/resolvers-types.js";
+import { gameMutation } from "./game/game.mutation.js";
+import { gameQuery } from "./game/game.query.js";
+import { gameResolvers } from "./game/game.resolvers.js";
+import { reviewQuery } from "./review/review.query.js";
+import { reviewResolvers } from "./review/review.resolvers.js";
+import { authorQuery } from "./author/author.query.js";
+import { authorResolvers } from "./author/author.resolvers.js";
+import _db from "./_db.js";
+
+export const resolvers: Resolvers = {
+  Query: {
+    ...gameQuery,
+    ...reviewQuery,
+    ...authorQuery,
+  },
+  Author: { ...authorResolvers },
+  Game: { ...gameResolvers },
+  Review: { ...reviewResolvers },
+  Mutation: {
+    ...gameMutation,
+  },
+};
